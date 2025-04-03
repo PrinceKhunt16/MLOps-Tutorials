@@ -1,0 +1,84 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python3 05_ml_pipeline_dvc_s3/src/data_ingestion.py
+    deps:
+    - path: 05_ml_pipeline_dvc_s3/src/data_ingestion.py
+      hash: md5
+      md5: 0a95d988cdf2ca426e2fd31d03e840bb
+      size: 3950
+    outs:
+    - path: 05_ml_pipeline_dvc_s3/data/raw
+      hash: md5
+      md5: 6a4d11ab83c20d7412f4696595c0b4d1.dir
+      size: 479272
+      nfiles: 2
+  data_preprocessing:
+    cmd: python3 05_ml_pipeline_dvc_s3/src/data_preprocessing.py
+    deps:
+    - path: 05_ml_pipeline_dvc_s3/data/raw
+      hash: md5
+      md5: 6a4d11ab83c20d7412f4696595c0b4d1.dir
+      size: 479272
+      nfiles: 2
+    - path: 05_ml_pipeline_dvc_s3/src/data_preprocessing.py
+      hash: md5
+      md5: 254c7992278a38ae7406a85196d86c65
+      size: 3641
+    outs:
+    - path: 05_ml_pipeline_dvc_s3/data/interim
+      hash: md5
+      md5: d3f80ea917209a657caed01201ee2780.dir
+      size: 254818
+      nfiles: 2
+  feature_engineering:
+    cmd: python3 05_ml_pipeline_dvc_s3/src/feature_engineering.py
+    deps:
+    - path: 05_ml_pipeline_dvc_s3/data/interim
+      hash: md5
+      md5: d3f80ea917209a657caed01201ee2780.dir
+      size: 254818
+      nfiles: 2
+    - path: 05_ml_pipeline_dvc_s3/src/feature_engineering.py
+      hash: md5
+      md5: 3b4b3787b2627a1bdb36a02c6923c262
+      size: 4078
+    outs:
+    - path: 05_ml_pipeline_dvc_s3/data/processed
+      hash: md5
+      md5: 6f393d613e1ef6777f08947b3ebd8e7e.dir
+      size: 829484
+      nfiles: 2
+  model_building:
+    cmd: python3 05_ml_pipeline_dvc_s3/src/model_building.py
+    deps:
+    - path: 05_ml_pipeline_dvc_s3/data/processed
+      hash: md5
+      md5: 6f393d613e1ef6777f08947b3ebd8e7e.dir
+      size: 829484
+      nfiles: 2
+    - path: 05_ml_pipeline_dvc_s3/src/model_building.py
+      hash: md5
+      md5: 52c935edd8d7692a464f1fbd9541fbb2
+      size: 4048
+    outs:
+    - path: 05_ml_pipeline_dvc_s3/models/model.pkl
+      hash: md5
+      md5: 8723443ffb2db21858e7eb1e02f81608
+      size: 3320619
+  model_evaluation:
+    cmd: python3 05_ml_pipeline_dvc_s3/src/model_evaluation.py
+    deps:
+    - path: 05_ml_pipeline_dvc_s3/models/model.pkl
+      hash: md5
+      md5: 8723443ffb2db21858e7eb1e02f81608
+      size: 3320619
+    - path: 05_ml_pipeline_dvc_s3/src/model_evaluation.py
+      hash: md5
+      md5: adbce7b538ad7c00b7c1f3a3cc54fc66
+      size: 5132
+    outs:
+    - path: 05_ml_pipeline_dvc_s3/reports/metrics.json
+      hash: md5
+      md5: 44e99fea2ab8a7cb58b0ba59b4c1e32c
+      size: 226

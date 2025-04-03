@@ -12,7 +12,7 @@ nltk.download('stopwords')
 nltk.download('punkt')
 
 # Ensure the "logs" directory exists
-log_dir = '05_ml_pipeline_dvc&s3/logs'
+log_dir = '05_ml_pipeline_dvc_s3/logs'
 os.makedirs(log_dir, exist_ok=True)
 
 # Setting up logger
@@ -85,8 +85,8 @@ def preprocess_df(df, text_column='text', target_column='target'):
 def main(text_column='text', target_column='target'):
     try:
         # Fetch the data from data/raw
-        train_data = pd.read_csv('05_ml_pipeline_dvc&s3/data/raw/train.csv')
-        test_data = pd.read_csv('05_ml_pipeline_dvc&s3/data/raw/test.csv')
+        train_data = pd.read_csv('05_ml_pipeline_dvc_s3/data/raw/train.csv')
+        test_data = pd.read_csv('05_ml_pipeline_dvc_s3/data/raw/test.csv')
         logger.debug('Data loaded successfully')
 
         # Transform the data
@@ -94,7 +94,7 @@ def main(text_column='text', target_column='target'):
         test_processed_data = preprocess_df(test_data, text_column, target_column)
 
         # Store the data inside data/interim
-        data_path = os.path.join("05_ml_pipeline_dvc&s3/data", "interim")
+        data_path = os.path.join("05_ml_pipeline_dvc_s3/data", "interim")
         os.makedirs(data_path, exist_ok=True)
 
         train_processed_data.to_csv(os.path.join(data_path, "train_processed.csv"), index=False)

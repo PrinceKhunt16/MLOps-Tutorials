@@ -7,7 +7,7 @@ import requests
 from io import StringIO
 
 # Configure logging
-LOG_DIR = "05_ml_pipeline_dvc&s3/logs"
+LOG_DIR = "05_ml_pipeline_dvc_s3/logs"
 os.makedirs(LOG_DIR, exist_ok=True)
 
 LOGGER = logging.getLogger("data_ingestion")
@@ -98,7 +98,7 @@ def store_data(train_df: pd.DataFrame, test_df: pd.DataFrame) -> None:
 
 def main():
     try:
-        config = load_config(config_path="05_ml_pipeline_dvc&s3/params.yaml")
+        config = load_config(config_path="05_ml_pipeline_dvc_s3/params.yaml")
         test_ratio = config["data_ingestion"]["test_size"]
 
         dataset_url = "https://raw.githubusercontent.com/vikashishere/Datasets/main/spam.csv"
