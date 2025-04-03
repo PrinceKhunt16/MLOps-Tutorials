@@ -1,6 +1,7 @@
-data
-models
-reports
+# 05_ml_pipeline_dvc&s3/data
+# 05_ml_pipeline_dvc&s3/models
+# 05_ml_pipeline_dvc&s3/reports
+# 05_ml_pipeline_dvc&s3/logs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
