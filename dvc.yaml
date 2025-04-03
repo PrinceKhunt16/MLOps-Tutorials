@@ -37,3 +37,10 @@ stages:
     - 05_ml_pipeline_dvc_s3/src/model_evaluation.py
     metrics:
     - 05_ml_pipeline_dvc_s3/reports/metrics.json
+params:
+- dvclive/params.yaml
+metrics:
+- dvclive/metrics.json
+plots:
+- dvclive/plots/metrics:
+    x: step

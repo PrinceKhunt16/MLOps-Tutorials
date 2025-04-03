@@ -75,10 +75,10 @@ stages:
       size: 3320619
     - path: 05_ml_pipeline_dvc_s3/src/model_evaluation.py
       hash: md5
-      md5: adbce7b538ad7c00b7c1f3a3cc54fc66
-      size: 5132
+      md5: 6e4ef81709715864c9f2f12dd993a83e
+      size: 5146
     outs:
     - path: 05_ml_pipeline_dvc_s3/reports/metrics.json
       hash: md5
-      md5: 44e99fea2ab8a7cb58b0ba59b4c1e32c
+      md5: 5fa19b465235a55c3c0d1e93e22a4a3a
       size: 226

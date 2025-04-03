@@ -7,8 +7,8 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, roc_a
 import logging
 import yaml
 from datetime import datetime
+from dvclive import Live
 
-# Define base paths
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 INTERIM_DIR = os.path.join(DATA_DIR, "interim")
@@ -18,11 +18,9 @@ MODELS_DIR = os.path.join(BASE_DIR, "models")
 LOGS_DIR = os.path.join(BASE_DIR, "logs")
 REPORTS_DIR = os.path.join(BASE_DIR, "reports")
 
-# Ensure necessary directories exist
 os.makedirs(LOGS_DIR, exist_ok=True)
 os.makedirs(REPORTS_DIR, exist_ok=True)
 
-# Logging configuration
 logger = logging.getLogger("model_evaluation")
 logger.setLevel(logging.DEBUG)
 
@@ -41,7 +39,6 @@ logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
 def load_params(params_path: str) -> dict:
-    """Load parameters from a YAML file."""
     try:
         with open(params_path, "r") as file:
             params = yaml.safe_load(file)
@@ -58,7 +55,6 @@ def load_params(params_path: str) -> dict:
         raise
 
 def load_model(file_path: str):
-    """Load the trained model from a file."""
     try:
         with open(file_path, "rb") as file:
             model = pickle.load(file)
@@ -72,7 +68,6 @@ def load_model(file_path: str):
         raise
 
 def load_data(file_path: str) -> pd.DataFrame:
-    """Load data from a CSV file."""
     try:
         df = pd.read_csv(file_path)
         logger.debug("Data loaded from %s", file_path)
@@ -85,7 +80,6 @@ def load_data(file_path: str) -> pd.DataFrame:
         raise
 
 def evaluate_model(clf, X_test: np.ndarray, y_test: np.ndarray) -> dict:
-    """Evaluate the model and return the evaluation metrics."""
     try:
         y_pred = clf.predict(X_test)
         y_pred_proba = clf.predict_proba(X_test)[:, 1]
@@ -108,7 +102,6 @@ def evaluate_model(clf, X_test: np.ndarray, y_test: np.ndarray) -> dict:
         raise
 
 def save_metrics(metrics: dict, file_path: str) -> None:
-    """Save the evaluation metrics to a JSON file in a timestamped format."""
     try:
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
     
@@ -139,6 +132,7 @@ def save_metrics(metrics: dict, file_path: str) -> None:
 
 def main():
     try:
+        params = load_params(PARAMS_PATH)
         clf = load_model(os.path.join(MODELS_DIR, "model.pkl"))
         test_data = load_data(os.path.join(PROCESSED_DIR, "test_tfidf.csv"))
         
@@ -146,6 +140,12 @@ def main():
         y_test = test_data.iloc[:, -1].values
 
         metrics = evaluate_model(clf, X_test, y_test)
+
+        with Live(save_dvc_exp=True) as live:
+            live.log_metric('accuracy', accuracy_score(y_test, y_test))
+            live.log_metric('precision', precision_score(y_test, y_test))
+            live.log_metric('recall', recall_score(y_test, y_test))
+            live.log_params(params)
 
         save_metrics(metrics, os.path.join(REPORTS_DIR, "metrics.json"))
     except Exception as e:
